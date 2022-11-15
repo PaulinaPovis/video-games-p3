@@ -144,6 +144,15 @@ h2{
     background-color: #e9606e;
 }
 
+.animatedBall{
+    background-color: #05bbcf;
+    height:50px;
+    width: 50px;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+}
+
 
 @keyframes avatarAnimation{
     0%{
@@ -152,4 +161,7 @@ h2{
     100%{
         transform: translateY(0) scale(1);
     }
+}
+.content-hidden {
+    display:none;
 }

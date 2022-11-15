@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="css/libs/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js\jquery-3.6.1.min.js"></script>
+    
   </head>
   <body>
     <header class="p-3 text-bg-dark">
@@ -40,14 +42,14 @@
   <!--contenido de la pagina -->
   <div class="cover-container d-flex h-200 p-3 mx-auto flex-column">
     <div class="container" width="200">
-      <div class="title-container">
+      <div class="title-container content-hidden" id="animado">
         <h1 class="cover-heading">Welcome to PLAYTAB!</h1>
         <p class="lead">If you are new, you can Sign-up and register yourself, or if you are a familiar face, you can Log in to play our Games!</p>
       </div>
     </div>
 
     <div class="container" width="200">
-      <div class="title-container">
+      <div class="title-container content-hidden" id="animado2">
         <div class="d-flex flex-wrap align-items-center justify-content-center">
           <div class="lead p-2">
             <a href="/login.html" class="btn btn-lg btn-secondary">Start!</a>
@@ -58,6 +60,8 @@
         </div>
       </div>
     </div>
+
+    
    
   </div>
 
@@ -67,6 +71,17 @@
         <li><a href="rooms.html" class="nav-link px-2 text-secondary">Rooms</a></li>       
     </ul>
     <p class="text-center text-muted">Pinilinpauxa © 2022 P210 - Front End</p>
+
+    <script>
+      $(document).ready(function(){
+        $('#animado').each(function(){
+          $(this).fadeIn( 3000, function(){ /*animacion acabada*/});   
+        });
+      $('#animado2').each(function(){
+          $(this).fadeIn( 3000, function(){ /*animacion acabada*/});
+        });
+      });     
+    </script>
   </footer>
 </body>
 </html>
