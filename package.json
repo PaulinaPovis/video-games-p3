@@ -2,10 +2,10 @@
   "name": "video-games-p2",
   "version": "1.0.0",
   "description": "rest api for login , register sing up , etc",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "server": "node app.js",
-    "node-watch": "nodemon app.js",
+    "server": "node server.js",
+    "node-watch": "nodemon server.js",
     "start": "http-server -c-1 -p 8081"
   },
   "repository": {
@@ -19,7 +19,10 @@
   },
   "homepage": "https://github.com/PaulinaPovis/video-games-p2#readme",
   "dependencies": {
-    "http-server": "^14.1.1"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "http-server": "^14.1.1",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
