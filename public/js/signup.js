@@ -80,7 +80,12 @@ form.addEventListener('submit', (e) => {
 
         fetch('http://localhost:3000/api/users', {
             method: "POST",
-            body: JSON.stringify(data)            
+            body: JSON.stringify(data),
+            headers: new Headers(
+                {
+                   'Content-Type':  'application/json'
+                }
+            )           
         })
         .then(data => data.json()) 
         .then(response => {
