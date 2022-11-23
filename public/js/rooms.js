@@ -89,7 +89,12 @@ function saveRoom(){
             else{
                 fetch('http://localhost:3000/api/rooms/' + element.id + '/users', {
                     method: "POST",
-                    body: currentUser           
+                    body: currentUser,
+                    headers: new Headers(
+                        {
+                           'Content-Type':  'application/json'
+                        }
+                    )          
                 })
                 .then(data => data.json()) 
                 .then(response => {

@@ -3,12 +3,12 @@ const { request, response } = require('express');
 class RoomController {
 
 
-    async getAllRooms(req,res=response){
+    getAllRooms(req,res=response){
             res.status(200);
             res.json(roomData.rooms);
     }
 
-    async getRoomById(req=request,res=response){
+    getRoomById(req=request,res=response){
       
             const {id} = req.params;
             console.log('id '+id);
@@ -21,8 +21,7 @@ class RoomController {
     }
 
 
-
-    async createRoom(req=request,res=response){
+    createRoom(req=request,res=response){
   
         const room =  req.body;
           // obtener un id randon 
@@ -34,13 +33,16 @@ class RoomController {
         
     }
 
-    async addUserOnRoom(req=request,res=response){
+    addUserOnRoom(req=request,res=response){
        
         const user =  req.body;
         const {id} = req.params;
+
+
         var isAddUser = false;
-        //   roomData.rooms[0].players.push(user);
-        const selectedRoom = roomData.rooms.find(item => item.id === Number(idRoom));
+
+        const selectedRoom = roomData.rooms.find(item => item.id == Number(id));
+        console.log(selectedRoom);
 
         roomData.rooms.forEach(room => {
             if(room.players.some(item => item.id === Number(user.id))){
@@ -59,16 +61,15 @@ class RoomController {
             res.status(400);
             res.json({mssg: "You are already in a room, please exit the room!"});
         }
-       
     
     }
 
-    async deleteUserOnRoom(req=request,res=response){
+    deleteUserOnRoom(req=request,res=response){
         const user =  req.body;
         const {id} = req.params;
-        console.log('idRoom delete '+idRoom);
+        console.log('idRoom delete '+id);
         roomData.rooms.forEach(r =>{
-        if(u => u.id == idRoom){
+        if(u => u.id == id){
         const plays = r.players.filter(f  => f.id !=user.id);
             r.players = plays;  
         }

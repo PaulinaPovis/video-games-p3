@@ -3,27 +3,22 @@ const { request, response } = require('express');
 class UserController {
 
 
-    async getAllUsers(req,res=response){
+    getAllUsers(req,res=response){
         res.status(200);
-        res.json(userData.users);
-
-        
+        res.json(userData.users);      
   
     }
 
-    async getUserById(req=request,res = response){
+    getUserById(req=request,res = response){
     
             const {id} = req.params;
             const user = userData.users.find(u => u.id == id);
             res.status(200);
             res.json(user);
-        
 
     }
 
-
-
-    async createUser(req=request,res=response){
+    createUser(req=request,res=response){
 
         
         const user =  req.body;
@@ -53,13 +48,12 @@ class UserController {
         
     }
 
-    async deleteUser(req,res){
-
+    deleteUser(req,res){
 
     }
 
-    async login(req=request,res=response){
-           
+    login(req=request,res=response){
+           console.log( 'BODY: ', req.body)
             const {email,password} =  req.body;
             console.log(email);
             const existe = userData.users.find(u =>(u.email == email && u.password == password));

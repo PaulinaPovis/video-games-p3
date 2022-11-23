@@ -8,5 +8,6 @@ const router = Router();
     router.post('/users', userController.createUser);
     router.delete('/users',userController.deleteUser);
     router.post('/login',userController.login);
+   
 
     module.exports = router;
