@@ -1,0 +1,23 @@
+mixin mixinSiteHeader(currentPage)
+    - const allowedRoutes = ['rooms', 'room1', 'room2', 'room3', 'room4'];
+    header.p-3.text-bg-dark 
+        .container 
+            .row.flex-wrap.align-items-center.justify-content-center.justify-content-lg-start
+            .col-12.text-center 
+                .logo.text-start 
+                    img.img-fluid(src="../img/LOGO.png", alt="logo")
+                if allowedRoutes.includes(currentPage)
+                    .user-detail(id="user-detail")
+                        span 
+                        img(src="", alt="")
+                nav.mb-2 
+                    ul.nav.justify-content-center
+                        li
+                            a.nav-link.px-2.text-secondary(href="index.html") Home 
+                        li 
+                            a.nav-link.px-2.text-secondary(href="rooms.html") Rooms
+                .text-center.hide(id="menu-hide-on-login")
+                    a.btn.btn-outline-light.me-2(href="login.html") Login 
+                    a.btn.btn-warning(href="signup.html") Sign-up 
+                .text-center.hide(id="menu-show-on-login")
+                    button.btn.btn-outline-light.me-2(id="btn-logout") Logout

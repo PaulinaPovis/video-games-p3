@@ -1,0 +1,31 @@
+extends ../layout/default.pug 
+include ../mixins/site-header.pug
+
+block header 
+    - const currentPage = 'login';
+    +mixinSiteHeader(currentPage)
+
+block content
+    section.section
+        .container 
+            .row 
+                .col-12.col-md-8.mx-auto
+                    form(id="login")
+                        .form-floating.mb-3
+                            input.form-control.rounded-3(type="email", name="email", id="userEmail", placeholder="name@example.com")
+                            label(for="userEmail") Email address
+                            .invalid-field
+                                //-Validación de errores
+                        .form-floating.mb-3
+                            input.form-control.rounded-3(type="password", name="pass", id="userPass", placeholder="Password")
+                            label(for="userPass") Password 
+                            .invalid-field
+                                //-Validación de errores
+                        p.error-message.hide
+                        button.w-100.mb-2.btn.btn-lg.rounded-3.btn-primary(type="submit") Log in 
+                        hr.my-4
+                        small.text-muted New user?
+                            a(href="signup.html") Sign up here
+
+block pageScripts 
+    script(src="../js/login.js", type="module") 

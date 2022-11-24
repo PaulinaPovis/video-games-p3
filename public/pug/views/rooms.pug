@@ -1,0 +1,48 @@
+extends ../layout/default.pug 
+include ../mixins/site-header.pug
+
+block header 
+    - const currentPage = 'rooms';
+    +mixinSiteHeader(currentPage)
+
+block content
+    p.infoText To enter a room, please drag your avatar and drop it on the room you want to play!
+    //-Avatar escogido
+    .avatars.avatar-output(id="avatar-output")
+        img(src="", alt="", draggable="true", width="70")
+    //-Salas
+    p.error-message.hide.text-center
+    section.section 
+        .container 
+            .row.row-cols-1.row-cols-md-2.row-cols-lg-4.g-4.justify-content-center
+                .col-12.col-md-6.mb-3
+                    .card.btn
+                        .card-header
+                            img.img-top.img-fluid(alt="table1")
+                        .card-body
+                            p.card-text
+                .col-12.col-md-6.mb-3
+                    .card.btn
+                        .card-header
+                            img.img-top.img-fluid(alt="table2")
+                        .card-body
+                            p.card-text
+                .col-12.col-md-6.mb-3.mb-md-0
+                    .card.btn
+                        .card-header
+                            img.img-top.img-fluid(alt="table3")
+                        .card-body
+                            p.card-text
+                .col-12.col-md-6
+                    .card.btn
+                        .card-header
+                            img.img-top.img-fluid(alt="table4")
+                        .card-body
+                            p.card-text
+            button.w-100.mb-2.btn.btn-lg.rounded-3.btn-primary(id="btn-go", type="button") Go!
+    .alert-room
+
+block pageScripts 
+    script(src="../js/libs/jquery.js")
+    script(src="../js/index.js", type="module")
+    script(src="../js/rooms.js", type="module")
