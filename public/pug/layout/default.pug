@@ -1,11 +1,15 @@
-include ../includes/head.pug
+doctype html
+html(lang="es")
+    head
+        include ../includes/meta.pug
+    body
 
-block header
+        block header
 
-main
-    block content
+        main
+            block content
 
-include ../includes/footer.pug
-    script(src="../js/libs/bootstrap.min.js") 
-    script(src="../js/libs/jquery-3.6.1.min.js") 
-    block pageScripts
+        include ../includes/footer.pug
+        script(src="../js/libs/bootstrap.min.js") 
+        script(src="../js/libs/jquery-3.6.1.min.js") 
+        block pageScripts
