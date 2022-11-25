@@ -152,7 +152,29 @@ h2{
     position: relative;
     z-index: 1;
 }
+.board{
+    width: 50vw;
+    height: 50vw;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
+.board-item{
+    background-color: white;
+    width: calc(16.666% - 10px);
+    height: calc(16.666% - 10px);
+    box-shadow: 0px 0px 1px 1px #000000, 1px 1px 0px 0px #000000;
+}
+
+@media (min-width: 1200px){
+    .board{
+        width: 25vw;
+        height: 25vw;
+    }
+}
 
 @keyframes avatarAnimation{
     0%{

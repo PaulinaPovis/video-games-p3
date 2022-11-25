@@ -123,6 +123,11 @@ function saveRoom(){
                         });
                         //Fin Animación jQuery
                         $('#btn-go').prop('disabled', false);
+                       
+                        $( "#btn-go" ).click(function() {
+
+                            window.location.href = 'room' + room.id + '.html';
+                          });
                         
                     }
                     

@@ -6,13 +6,11 @@ block header
     +mixinSiteHeader(currentPage) 
 
 block content
-    //-Titulo
-    .container.title-container(id="title")
-        h1 Welcome to the Room 1
-    //-Sala
-    section.section
-
+    h1 Welcome to the Room 1
+    .board 
+        - for (var i = 0; i < 36; ++i)
+            .board-item(id=i+1)
+         
 block pageScripts 
-    script(src="../js/home-animations.js")
-    script(src="../js/index.js")
-    script(src="../js/rooms.js")
+    script(src="../js/index.js", type="module")
+    script(src="../js/game.js")
