@@ -1,0 +1,16 @@
+extends ../layout/default.pug 
+include ../mixins/site-header.pug
+
+block header 
+    - const currentPage = 'room3';
+    +mixinSiteHeader(currentPage) 
+
+block content
+    h1 Welcome to the Room 3
+    .board 
+        - for (var i = 0; i < 36; ++i)
+            .board-item(id=i+1)
+
+block pageScripts 
+    script(src="../js/index.js", type="module")
+    script(src="../js/game.js")

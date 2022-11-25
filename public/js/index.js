@@ -7,9 +7,10 @@ const menuHideOnLogin = document.getElementById('menu-hide-on-login');
 const menuLogout = document.getElementById('menu-show-on-login');
 const userDetail = document.getElementById('user-detail');
 
-let user = WinStorage.getParsed('currentUser');
+const user = WinStorage.getParsed('currentUser');
 
 if(user !== null && user !== undefined){
+    
     fetch('http://localhost:3000/api/users/' + user.id)
         .then(data => data.json())
         .then(response => {

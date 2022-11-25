@@ -1,0 +1,27 @@
+extends ../layout/default.pug 
+include ../mixins/site-header.pug
+
+block header 
+    - const currentPage = 'home';
+    +mixinSiteHeader(currentPage)
+
+block content
+    .cover-container.d-flex.h-200.p-3.mx-auto.flex-column
+        .container(width="200")
+            .row 
+                .col-12 
+                    .title-container.content-hidden(id="animado")
+                        h1.cover-heading Welcome to PLAYTAB!
+                            p.lead If you are new, you can Sign-up and register yourself, or if you are a familiar face, you can Log in to play our Games!
+        .container(width="200")
+            .row 
+                .col-12
+                    .title-container.content-hidden(id="animado2")
+                        .d-flex.flex-wrap.align-items-center.justify-content-center
+                            .lead.p-2
+                                a.btn.btn-lg.btn-secondary(href="login.html") Start! 
+                            .lead.p-2
+                                a.btn.btn-lg.btn-secondary(href="signup.html") Go to Register!
+
+block pageScripts 
+    script(src="../js/home-animations.js") 
