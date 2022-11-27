@@ -18,6 +18,7 @@ app.use( express.static('public'));
 // routers
 app.use('/api',require('./src/route/UserRouters'));
 app.use('/api',require('./src/route/RoomRouters'));
+app.use('/api',require('./src/route/GameRouters'));
 
 
 app.listen(3000,()=>{console.log("Servidor arrancado en el puerto 3000")});
