@@ -10,6 +10,35 @@ let gameId = undefined;
 let hasTwoPlayers = false;
 let lastBoardPosition = undefined;
 
+// Comprobamos si ya existe alguna partida y si existe alguna partida en nuestra sala
+function checkIfGameExist(){
+    fetch('http://localhost:3000/api/games')
+    .then(data => data.json()) 
+    .then(response => {
+        if(response.length){
+            response.forEach(item => {
+                
+                if(item.room.id == roomSelected.id){
+                    
+                    gameId = item.id;
+                    addPlayer(gameId);
+                }
+                else{
+                    //Invocamos la función nada más iniciar la vista para que cree la partida
+                    createGame();
+                }
+            });
+        }
+        else{
+            
+            //Invocamos la función nada más iniciar la vista para que cree la partida
+            createGame();
+        } 
+    }) 
+};
+
+checkIfGameExist();
+
 // Acción para crear la partida llamando al servicio
 function createGame(){
     //Datos para pasar al backend
@@ -55,8 +84,44 @@ function createGame(){
     })
 };
 
-//Invocamos la función nada más iniciar la vista para que cree la partida
-createGame();
+
+// Acción para añadir un jugador a la sala
+function addPlayer(gameId){
+
+    const data = {
+        id: user.id,
+        userName: user.userName,
+        email: user.email
+    };
+
+    fetch(`http://localhost:3000/api/games/${gameId}/players`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: new Headers(
+            {
+                'Content-Type':  'application/json'
+            }
+        )          
+    })
+    .then(data => data.json())
+    .then(response => {
+        console.log(response);
+        player = response;
+        startGame();
+    })
+    .catch((err) => {
+        //Si va mal
+        console.log(err)
+    })
+};
+
+// Acción para setear los colores y datos del tablero
+function setBoards(leftColor, rightColor){
+    const userNameLeft = document.getElementById('board-user-left');
+    const svgLeft = document.querySelectorAll('svg-left path');
+    const userNameRight = document.getElementById('board-user-right');
+    const svgRight = document.querySelectorAll('svg-right path');
+}
 
 
 //Acción para comenzar el juego
@@ -69,32 +134,7 @@ function startGame(){
             const selected = Number(event.target.id);
             const boardPosition = positionsJson.positions.find(item => item.id === selected)
     
-            console.log("Board position es: ", boardPosition);
-            console.log(event.target.id)
-    
-            if(boardPosition.status === false && lastBoardPosition === undefined) {
-                // Fetch al backend
-                fetchCell(selected);
-    
-                boardPosition.status = true;
-                lastBoardPosition = boardPosition;
-    
-                console.log("Fuera del else Last position es: ", lastBoardPosition);
-            } 
-            else {
-    
-                if(lastBoardPosition.options.includes(selected) && boardPosition.status === false) {
-                    // Fetch al backend
-                    fetchCell(selected);
-    
-                    boardPosition.status = true;
-                    lastBoardPosition = boardPosition;
-                    console.log("Last position es: ", lastBoardPosition);
-                } 
-                else {
-                    console.log("No entra")
-                }
-            }
+            fetchCell(selected);
         })
     });
 }
@@ -104,7 +144,7 @@ function startGame(){
 function fetchCell(cellNumber){
     //Datos a enviar al backend
     const data = {
-        id: player.id,
+        id: cellNumber,
         color: player.color
     }
     fetch(`http://localhost:3000/api/games/${gameId}/cells/${cellNumber}`, {

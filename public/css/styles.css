@@ -48,6 +48,10 @@ h2{
     color: white;
 }
 
+.menu-right{
+    width: 80%;
+}
+
 .user-detail {
     display: flex;
     gap: 15px;
@@ -152,6 +156,153 @@ h2{
     position: relative;
     z-index: 1;
 }
+
+.room-page {
+    background-image: url("../img/game-background.jpg");
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+}
+
+.board-wrapper{
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.user-board{
+    display: flex;
+    flex-direction: column;
+    max-width: 434px;
+    align-self: center;
+    justify-self: center;
+}
+
+.user-board-left{
+    grid-row: 1;
+}
+
+.board{
+    grid-row: 2;
+}
+
+.user-board-right{
+    grid-row: 3;
+}
+
+.img-wrapper{
+    width: 100%;
+    position: relative;
+}
+
+.img-wrapper img{
+    width: 100%;
+}
+
+.user-name, .user-score-wrapper{
+    position: absolute;
+}
+
+.user-name{
+    top: 28%;
+    left: 14%;
+    text-align: right;
+    width: 65%;
+    font-size: 22px;
+}
+.user-score-wrapper{
+    top: 53%;
+    left: 20%;
+    width: 67%;
+}
+
+.user-score, .user-percentage{
+    display: block;
+    padding:0 10px;
+    width: 100%;
+    height: 22px;
+    color: #ffffff;
+    position: relative;
+    z-index: 10;
+    text-align: right;
+}
+
+.user-score::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -6%;
+    width: 105%;
+    height: 100%;
+    background-color: #2A1E54;
+    transform: skew(28deg, 0deg);
+    z-index: -1;
+}
+
+.user-percentage::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 106%;
+    height: 100%;
+    background-color: #2A1E54;
+    transform: skew(28deg, 0deg);
+    z-index: -1;
+}
+
+.user-score{
+    margin-bottom: 10px;
+}
+
+.user-board-right .user-name{
+    transform: scaleX(-1);
+    text-align: left;
+}
+
+.user-board-right .user-score-wrapper{
+    transform: scaleX(-1);
+}
+
+.user-board-right .user-score-wrapper .user-score{
+    text-align: left;
+}
+
+.user-board-right .user-score-wrapper .user-score::before{
+    left: 0;
+    transform: skew(-28deg, 0deg);
+}
+
+.user-board-right .user-score-wrapper .user-percentage{
+    text-align: left;
+}
+
+.user-board-right .user-score-wrapper .user-percentage::before{
+    left: -6%;
+    transform: skew(-28deg, 0deg);
+}
+
+.user-board-right{
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+.user-board svg{
+    width: 100%;
+    transform: translate(16px, -65px);
+}
+
+.user-board-left svg{
+    top: 54%;
+    left: 5%;
+}
+
+.user-board-right svg{
+    top: 54%;
+    left: 5%;
+}
+
 .board{
     width: 50vw;
     height: 50vw;
@@ -173,6 +324,15 @@ h2{
     .board{
         width: 25vw;
         height: 25vw;
+    }
+
+    .board-wrapper{
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+    }
+
+    .user-board, .board{
+        grid-row: auto;
     }
 }
 
