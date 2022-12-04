@@ -17,6 +17,34 @@ class GameController {
     res.json(game);
   }
 
+  
+  deleteGameById(req = request, res = response) {
+    const { idgame } = req.params;
+    console.log("idgame:" + idgame);
+
+    try{
+
+      const game = gameData.games.filter((u) => u.id == idgame);
+      if (game.length != 1)
+        throw new Error("The game not exists: "+idgame );
+
+      
+      gameData.games = gameData.games.filter((u) => u.id != idgame);    
+
+      console.log("game:" + game);
+      res.status(204);
+      res.json();
+
+    }catch(e){
+      console.error(e);
+      res.status(400);
+      res.json({ msg: "" + e });
+    }
+
+
+
+  }
+
   createGame(req = request, res = response) {
     const { player, room } = req.body;
     const game = {};
@@ -55,6 +83,42 @@ class GameController {
 
     res.status(200);
     res.json(game);
+  }
+
+  deletePlayerOnGame(req = request, res = response) {
+    try{
+      console.log("deletePlayerOnGame ");
+      const { idgame,idplayer } = req.params;
+      console.log("id-game:" + idgame+" id-player:"+idplayer);
+
+      const game = gameData.games.filter((u) => u.id == idgame);
+      if (game.length != 1)
+        throw new Error("The game not exists: "+idgame );
+      
+      const player  =  game[0].players.filter(p=> p.id == idplayer);
+
+      if (player.length != 1)
+        throw new Error("The player not exists: "+idplayer);
+
+      gameData.games.forEach(g =>{
+
+        if(g.id == idgame){
+            g.players = g.players.filter(p1 => p1.id !=idplayer);
+        }
+
+      });
+
+
+      res.status(204);
+      res.json();
+
+
+    }catch(e){
+      res.status(400);
+      res.json({ msg: "" + e });
+    }
+
+
   }
 
   addPlayerOnGame(req = request, res = response) {
