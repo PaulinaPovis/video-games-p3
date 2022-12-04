@@ -2,6 +2,7 @@ const { gameData } = require("../data/GameData");
 const { request, response } = require("express");
 const { cell } = require("../model/Cell");
 const { game } = require("../model/Game");
+
 class GameController {
   getAllGames(req, res = response) {
     res.status(200);
@@ -52,6 +53,11 @@ class GameController {
     game.id = Math.floor(Math.random() * 1000000) + 10;
     game.players = [];
 
+    // global.io.emit('news', { hello: 'world' });
+  //   global.io.on('connection', (socket) => {
+  //     console.log('a user connected controller');
+  // });
+
     //generando color aleatorio
     player.color =
       "#" +
@@ -80,6 +86,7 @@ class GameController {
     }
 
     gameData.games.push(game);
+
 
     res.status(200);
     res.json(game);

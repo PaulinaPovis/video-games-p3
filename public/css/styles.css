@@ -164,6 +164,7 @@ h2{
     justify-content: center;
     align-items: center;
     background-size: cover;
+    flex-direction: column;
 }
 
 .board-wrapper{
@@ -179,17 +180,45 @@ h2{
     justify-self: center;
 }
 
-.user-board-left{
-    grid-row: 1;
-}
-
 .board{
     grid-row: 2;
+}
+
+.user-board-left{
+    grid-row: 1;
 }
 
 .user-board-right{
     grid-row: 3;
 }
+
+.user-board-left, .user-board-right{
+    display: none;
+}
+
+.user-board-left.show, .user-board-right.show{
+    display: flex;
+}
+
+.user-board-left-no-user, .user-board-right-no-user{
+    display: block;
+    background-color: #ffffff;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 0;
+    font-weight: bold;
+    font-size: 20px;
+    align-self: center;
+}
+
+.user-board-left-no-user.hide{
+    display: none;
+}
+
+.user-board-right-no-user.hide{
+    display: none;
+}
+
 
 .img-wrapper{
     width: 100%;
@@ -330,6 +359,10 @@ h2{
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
     }
+
+    /* .user-board{
+        display: flex;
+    } */
 
     .user-board, .board{
         grid-row: auto;
