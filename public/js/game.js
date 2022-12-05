@@ -1,4 +1,3 @@
-import positionsJson from '../board-position.json' assert {type: 'json'};
 import { WinStorage } from "./classes/WindowStorageManager.js";
 
 const socketIO = io();
@@ -142,7 +141,6 @@ function startGame(){
         element.addEventListener('click', function(event){
             
             const selected = Number(event.target.id);
-            const boardPosition = positionsJson.positions.find(item => item.id === selected)
     
             fetchCell(selected);
         })
