@@ -6,7 +6,8 @@ block header
     +mixinSiteHeader(currentPage) 
 
 block content
-    .room-page.py-5(id="room-one")
+    .room-page.py-5(id="room-1")
+        .final
         .container-fluid
             .row 
                 .col-12
@@ -55,9 +56,8 @@ block content
         .container.mt-5
             .row 
                 .col-12.text-center 
-                    button.btn.btn-warning(id="btn-exit-room") Exit Room
+                    button.btn.btn-warning.btn-exit-room(id="btn-exit-room") Exit Room
          
 block pageScripts 
-    script(src="/socket.io/socket.io.js") 
     script(src="../js/index.js", type="module")
     script(src="../js/game.js", type="module")

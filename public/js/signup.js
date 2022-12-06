@@ -1,3 +1,4 @@
+import { basePath } from "./classes/api/base.js";
 import { WinStorage } from "./classes/WindowStorageManager.js";
 
 /**
@@ -78,7 +79,7 @@ form.addEventListener('submit', (e) => {
             Object.assign(data, {avatar: avatar});
         }
 
-        fetch('http://localhost:3000/api/users', {
+        fetch(`${basePath}/users`, {
             method: "POST",
             body: JSON.stringify(data),
             headers: new Headers(

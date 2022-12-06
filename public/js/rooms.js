@@ -1,3 +1,4 @@
+import { basePath } from "./classes/api/base.js";
 import { WinStorage } from "./classes/WindowStorageManager.js";
 
 const elementRooms = document.querySelectorAll('.card');
@@ -13,7 +14,7 @@ const cardItems = document.querySelectorAll('.card');
 //Fin Drag and Drop
 
 function setRooms(){
-    return fetch('http://localhost:3000/api/rooms')
+    return fetch(`${basePath}/rooms`)
         .then(data => data.json()) 
         .then(response => {
 
@@ -87,7 +88,7 @@ function saveRoom(){
                 })
             }
             else{
-                fetch('http://localhost:3000/api/rooms/' + element.id + '/users', {
+                fetch(`${basePath}/rooms/${element.id}/users`, {
                     method: "POST",
                     body: currentUser,
                     headers: new Headers(
@@ -169,7 +170,7 @@ function hideAlert(){
 
 //función asignar avatar escogido
 if(user !== null && user !== undefined){
-    fetch('http://localhost:3000/api/users/' + user.id)
+    fetch(`${basePath}/users/${user.id}`)
             .then(data => data.json())
             .then(response => {
                 const image = document.querySelector('#avatar-output img');

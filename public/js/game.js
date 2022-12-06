@@ -1,50 +1,111 @@
+import { GameServices } from "./classes/api/GameServices.js";
+import { Player } from "./classes/Player.js";
 import { WinStorage } from "./classes/WindowStorageManager.js";
 
-const socketIO = io();
 
 // Variables necesarias y nodos del DOM
-const btnExitRoom = document.getElementById('btn-exit-room');
 const user = WinStorage.getParsed('currentUser');
 const roomSelected = WinStorage.getParsed('roomSelected');
-const squares = document.querySelectorAll('.board-item');
-let player = undefined;
-let gameId = undefined;
-let hasTwoPlayers = false;
-let lastBoardPosition = undefined;
-let playerOne, playerTwo
+//Nodos para setear los boards
+const userNameLeft = document.querySelector(`#room-${roomSelected.id} #board-user-left`);
+const userBoardLeft = document.querySelector(`#room-${roomSelected.id} .user-board-left`);
+const userBoardLeftScore = document.querySelector(`#room-${roomSelected.id} .user-board-left .user-score .text`);
+const userBoardLeftPercentage = document.querySelector(`#room-${roomSelected.id} .user-board-left .user-percentage .text`);
+const userBoardLeftNoUser = document.querySelector(`#room-${roomSelected.id} .user-board-left-no-user`);
+const svgLeft = document.querySelectorAll(`#room-${roomSelected.id} #svg-left path`);
+const userNameRight = document.querySelector(`#room-${roomSelected.id} #board-user-right`);
+const userBoardRight = document.querySelector(`#room-${roomSelected.id} .user-board-right`);
+const userBoardRightScore = document.querySelector(`#room-${roomSelected.id} .user-board-right .user-score .text`);
+const userBoardRightPercentage = document.querySelector(`#room-${roomSelected.id} .user-board-right .user-percentage .text`);
+const userBoardRightNoUser = document.querySelector(`#room-${roomSelected.id} .user-board-right-no-user`);
+const svgRight = document.querySelectorAll(`#room-${roomSelected.id} #svg-right path`);
+const winText = document.querySelector(`#room-${roomSelected.id} .final`);
 
-// Comprobamos si ya existe alguna partida y si existe alguna partida en nuestra sala
-function checkIfGameExist(){
-    fetch('http://localhost:3000/api/games')
-    .then(data => data.json()) 
-    .then(response => {
-        if(response.length){
-            response.forEach(item => {
-                
-                if(item.room.id == roomSelected.id){
-                    
-                    gameId = item.id;
-                    addPlayer(gameId);
-                }
-                else{
-                    //Invocamos la función nada más iniciar la vista para que cree la partida
-                    createGame();
-                }
-            });
-        }
-        else{
-            
-            //Invocamos la función nada más iniciar la vista para que cree la partida
-            createGame();
-        } 
-    }) 
+console.log(winText)
+let leftBoardPositions = 36;
+let gameId, winner;
+let players = [{}, {}];
+
+
+/**
+ * Función que gestiona el inicio de la partida
+ */
+function initGame(){
+    const boardSquares = document.querySelectorAll(`#room-${roomSelected.id} .board-item`);
+
+    //comprobamos si existe algún juego activo con nuestro id de room
+    GameServices.getAllGames()
+        .then(response => {
+            debugger
+            // Comprobamos si el array de la respuesta tiene longitud
+            if(response.length){
+
+                response.forEach(item => {
+                    //Si existe un juego con el id de nuestro room añadimos un jugador
+                    if(item.room.id == roomSelected.id){
+                        gameId = item.id;
+                        addNewPlayerOnGame(gameId)
+                    }
+                    else{
+                        setExitButton();
+                        // Si no existe un juego con nuestra sala lo creamos
+                        createNewGame();
+                    }
+                });
+            }
+            else{
+                setExitButton();
+                // Si no tiene longitud creamos el juego
+                createNewGame();
+            };
+        });
+
+    //Recorremos el array de cuadrados del HTML
+    boardSquares.forEach((element) => {
+
+        //Asignamos un escuchador con el evento click a cada elemento del array
+        element.addEventListener('click', function(event){
+            const cellSelected = Number(event.target.id);
+            console.log(players);
+            setCell(cellSelected);
+        });
+    });
 };
 
-checkIfGameExist();
+initGame();
 
-// Acción para crear la partida llamando al servicio
-function createGame(){
-    //Datos para pasar al backend
+function setExitButton(){
+    // Acción para sacar a un jugador de la sala
+    const btnExitRoom = document.querySelector(`#room-${roomSelected.id} .btn-exit-room`);
+    btnExitRoom.style.display = 'inline-block';
+    btnExitRoom.addEventListener('click', () => {
+        GameServices.deleteGameById(gameId)
+        .then(() => {
+            const data = {
+                id: user.id,
+                userName: user.userName
+            };
+            GameServices.deletePLayerOnRoom(data, roomSelected.id)
+            .then(() => {
+                // Borramos los datos del room en el localStorage
+                WinStorage.removeItem('roomSelected');
+                window.location.href = '/rooms.html';
+            })
+            .catch(err => {
+                console.error(err)
+            });
+        })
+        .catch(err => {
+            console.error(err)
+        })
+    });
+}
+
+/**
+ * Función para crear una nueva partida
+ */
+function createNewGame(){
+    //Datos para pasar al servicio
     const data = {
         player: {
             id: user.id,
@@ -57,47 +118,25 @@ function createGame(){
         }
     };
 
-    fetch('http://localhost:3000/api/games', {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: new Headers(
-            {
-                'Content-Type':  'application/json'
-            }
-        )          
-    })
-    .then(data => data.json()) 
+    GameServices.createGame(data)
     .then(response => {
-
-        if(response.msg){
-            //Ha habido un error
-            console.log(response.msg)
-        }
-        else{
-            /**
-             * 1 - Si va bien, asignamos valor a la variable player con el jugador que nos devuelve el
-             * servicio con el mismo id
-             * 
-             * 2 - Iniciamos el juego con la función startGame TODO: Aquí deberíamos poder saber si el juego
-             * ya está listo para poder jugar (2 jugadores), ahora mismo no sé si se puede saber
-             */
-
-            player = response.players.find(item => item.id === user.id);
-            gameId = response.id;
-            console.log(player);
-            socketIO.emit('game:player-1', (player));
-            startGame();
-        }
+        gameId = response.id;
+        const playerData = response.players[0];
+        Object.assign(playerData, {boardPosition: 'left'});
+        players[0] = new Player(playerData);
+        setPlayerOne();
     })
     .catch((err) => {
-        //Si va mal
-        console.log(err)
+        // Gestionar el error
+        console.error(err)
     })
 };
 
-
-// Acción para añadir un jugador a la sala
-function addPlayer(gameId){
+/**
+ * Función para añadir un nuevo jugador a la partida
+ * @param {Number} gameId id del juego 
+ */
+function addNewPlayerOnGame(gameId){
 
     const data = {
         id: user.id,
@@ -105,207 +144,104 @@ function addPlayer(gameId){
         email: user.email
     };
 
-    fetch(`http://localhost:3000/api/games/${gameId}/players`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: new Headers(
-            {
-                'Content-Type':  'application/json'
-            }
-        )          
-    })
-    .then(data => data.json())
+    GameServices.addPlayerOnGame(data, gameId)
     .then(response => {
-        if(response.msg){
-            //Ha habido un error
-        }
-        else{
-            console.log(response);
-            player = response;
-            socketIO.emit('game:player-2', (player));
-            startGame();
-        }
+        //Ocultamos el botón de salir del juego
+        document.querySelector(`#room-${roomSelected.id} .btn-exit-room`).style.display = 'none';
+        const playerData = response;
+        Object.assign(playerData, {boardPosition: 'right'});
+        players[1] = new Player(response)
+        //TODO: descomentar cuando este socket.io
+        // setPlayerOne();
+        setPlayerTwo();
     })
-    .catch((err) => {
-        //Si va mal
-        console.log(err)
+    .catch(err => {
+        // Gestionar el error
+        console.error(err)
     })
 };
 
 
-//Acción para comenzar el juego
-function startGame(){
-    //Recorremos el array de cuadrados del HTML
-    squares.forEach((element) => {
-        //Asignamos un escuchador con el evento click a cada elemento del array
-        element.addEventListener('click', function(event){
-            
-            const selected = Number(event.target.id);
+/**
+ * Acción para gestionar el número de celda seleccionada
+ * @param {Number} cellNumber Número de la celda seleccionada
+ */
+function setCell(cellNumber){
+    const currentPlayer = players.find(player => Object.keys(player).length && Number(player.player.id) === Number(user.id));
     
-            fetchCell(selected);
-        })
-    });
-}
-
-
-// Acción para llamar al backend con el número de celda seleccionada
-function fetchCell(cellNumber){
-    //Datos a enviar al backend
     const data = {
         id: cellNumber,
-        color: player.color
-    }
-    fetch(`http://localhost:3000/api/games/${gameId}/cells/${cellNumber}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: new Headers(
-            {
-                'Content-Type':  'application/json'
-            }
-        )          
-    })
-    .then(data => data.json()) 
-    .then(response => {
-        
-        if(response.msg === "Error: The cell id 9 can't be register, because not exist 2 players"){
-            //Todavía no hay dos jugadores
-        }
-        else{
-            //Ya hay dos jugadores
-            hasTwoPlayers = true;
-            if(response.msg && (response.msg.contains('Error: The cell is fill by') || response.msg.contains('Error: Not exits cell contiguous for cell'))){
+        color: currentPlayer.player.color
+    };
 
+    GameServices.putCellOnGame(data, gameId, cellNumber)
+    .then(response => {
+        if(!response.msg){
+            //Gestionar la puntuación del jugador
+            currentPlayer.setScore();
+
+            leftBoardPositions = leftBoardPositions - 1;
+
+            if(currentPlayer.player.boardPosition === 'left'){
+                userBoardLeftScore.innerHTML = `${currentPlayer.getScore()}/36`;
+                userBoardLeftPercentage.innerHTML = `${setPercentage(currentPlayer.getScore())}%`;
             }
             else{
-                socketIO.emit('game:cell-selected', response);
-                
+                userBoardRightScore.innerHTML = `${currentPlayer.getScore()}/36`;
+                userBoardRightPercentage.innerHTML = `${setPercentage(currentPlayer.getScore())}%`;
+            }
+
+            // lógica del ganador
+            if(leftBoardPositions === 0){
+                winText.classList.add('show');
+
+                // lógica del ganador si hay empate
+                if(players[0].score === 18 && players[1].score === 18){
+                    winText.innerHTML = `${players[0].player.userName} &  ${players[1].player.userName} are tie!!`;
+                }
+                else{
+                    // lógica del ganador si NO hay empate
+                    winText.innerHTML = `${currentPlayer.player.userName} wins!!`;
+                }
+
+                //Mostramos el botón de salir del juego
+                setExitButton();
             }
         }
-    }) 
-    .catch((err) => {
-        console.log(err)
-    }) 
+        else{
+            // ERROR
+        }
+    })
+    .catch(err => {
+        // Gestionar el error
+        console.error(err)
+    })
 };
 
 
-// Acción para borrar un jugador
-btnExitRoom.addEventListener('click', () => {
-    const data = {
-        id: user.id,
-        userName: user.userName,
-        email: user.email
-    };
+// Acción que calcula el porcentaje
+function setPercentage(value){
+    const total = 36;
+    return Math.round(100 * value / total);  
+};
 
-    fetch(`http://localhost:3000/api/games/${gameId}/players/${user.id}`, {
-        method: "DELETE",
-        body: JSON.stringify(data),
-        headers: new Headers(
-            {
-                'Content-Type':  'application/json'
-            }
-        )
-    })
-    .then(() => {
-        deleteUserOnRoom();
-    })
-    .catch((err) => {
-        //Si va mal
-        console.log(err);
-    })
-});
-
-
-//Acción para eliminar un usuario de una sala
-function deleteUserOnRoom(){
-    const data = {
-        id: user.id,
-        userName: user.userName
-    };
-
-    fetch(`http://localhost:3000/api/rooms/${roomSelected.id}/delete-user`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: new Headers(
-            {
-                'Content-Type':  'application/json'
-            }
-        )
-    })
-    .then(() => {
-        socketIO.emit('game:delete-player', (user));
-        // Borramos los datos del room en el localStorage
-        WinStorage.removeItem('roomSelected');
-        window.location.href = '/rooms.html';
-    })
-    .catch((err) => {
-        //Si va mal
-        console.log(err);
-    })
-}
-
-//Socket io
-
-//Nodos para setear los boards
-const userNameLeft = document.getElementById('board-user-left');
-const userBoardLeft = document.querySelector('.user-board-left');
-const userBoardLeftNoUser = document.querySelector('.user-board-left-no-user');
-const svgLeft = document.querySelectorAll('#svg-left path');
-const userNameRight = document.getElementById('board-user-right');
-const userBoardRight = document.querySelector('.user-board-right');
-const userBoardRightNoUser = document.querySelector('.user-board-right-no-user');
-const svgRight = document.querySelectorAll('#svg-right path');
-
-function setPlayerOne(player){
+// Setea el board del HTML del jugador 1
+function setPlayerOne(){
     userBoardLeft.classList.add('show');
     userBoardLeftNoUser.classList.add('hide');
-    userNameLeft.innerHTML = player.userName;
+    userNameLeft.innerHTML = players[0].player.userName;
     svgLeft.forEach(item => {
-        item.style.fill = player.color;
+        item.style.fill = players[0].player.color;
     });
 
 };
 
-function setPlayerTwo(player){
+// Setea el board del HTML del jugador 2
+function setPlayerTwo(){
     userBoardRight.classList.add('show');
     userBoardRightNoUser.classList.add('hide');
-    userNameRight.innerHTML = player.userName;
+    userNameRight.innerHTML = players[1].player.userName;
     svgRight.forEach(item => {
-        item.style.fill = player.color;
+        item.style.fill = players[1].player.color;
     });
-
 };
-
-
-socketIO.on('game:players', (players) => {
-    setPlayerOne(players[0]);
-    setPlayerTwo(players[1]);
-    
-});
-
-socketIO.on('game:player-1', (players) => {
-    setPlayerOne(players[0]);
-});
-
-socketIO.on('game:players-update', (data) => {
-    console.log(data)
-    if(data.index === 0){
-        userBoardLeft.classList.remove('show');
-        userBoardLeftNoUser.classList.remove('hide');
-    }
-    else{
-        userBoardRight.classList.remove('show');
-        userBoardRightNoUser.classList.remove('hide');
-    }
-    // setPlayerOne(players[0]);
-    
-});
-
-//Escucha los cambios de la selección de la celda y le asigna color
-socketIO.on('game:cell-selected', (data) => {
-    squares.forEach(element => {
-        console.log(element.id)
-        if(Number(element.id) ===  data.id){
-            element.style.backgroundColor = data.color;
-        }
-    });
-});

@@ -10,12 +10,21 @@ class GameController {
   }
 
   getGameById(req = request, res = response) {
-    const { idgame } = req.params;
-    console.log("idgame:" + idgame);
-    const game = gameData.games.find((u) => u.id == idgame);
-    console.log("game:" + game);
-    res.status(200);
-    res.json(game);
+    try{
+      const { idgame } = req.params;
+      console.log("idgame:" + idgame);
+      const game = gameData.games.find((u) => u.id == idgame);
+      console.log("game:" + game);
+      if (!game)
+        throw new Error("The game not exists: "+idgame );
+      res.status(200);
+      res.json(game);
+    }
+    catch(e) {
+      console.error(e);
+      res.status(400);
+      res.json({ msg: "" + e });
+    }
   }
 
   
@@ -52,11 +61,6 @@ class GameController {
     // obtener un id randon
     game.id = Math.floor(Math.random() * 1000000) + 10;
     game.players = [];
-
-    // global.io.emit('news', { hello: 'world' });
-  //   global.io.on('connection', (socket) => {
-  //     console.log('a user connected controller');
-  // });
 
     //generando color aleatorio
     player.color =
