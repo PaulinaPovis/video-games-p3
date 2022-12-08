@@ -26,7 +26,6 @@ const boardSquares = document.querySelectorAll(`#room-${roomSelected.id} .board-
 document.querySelector('.header').classList.add('hide');
 document.querySelector('.footer').classList.add('hide');
 
-//let leftBoardPositions = 36;
 let playerOneScore = 0;
 let playerTwoScore = 0;
 let gameId;
