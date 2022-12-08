@@ -20,12 +20,48 @@ const userBoardRightPercentage = document.querySelector(`#room-${roomSelected.id
 const userBoardRightNoUser = document.querySelector(`#room-${roomSelected.id} .user-board-right-no-user`);
 const svgRight = document.querySelectorAll(`#room-${roomSelected.id} #svg-right path`);
 const winText = document.querySelector(`#room-${roomSelected.id} .final`);
+const roomPage = document.querySelector('.room-page');
+const canvas = document.querySelector('#canvas');
 
 console.log(winText)
 let leftBoardPositions = 36;
 let gameId, winner;
 let players = [{}, {}];
 
+function initCanvas(){
+    let ctx = canvas.getContext("2d");
+    //construcción del canvas
+    /*
+    var canvas_width = window.innerWidth;
+    var canvas_height = roomPage.offsetHeight;
+    canvas.width = canvas_width;
+    canvas.height = canvas_height;
+    
+    window.addEventListener('resize,  canvas_width,canvas_height');
+    
+    //cargar imagen fondo
+    var backgroundImg = new Image();
+    backgroundImg.src = '../img/game-background.jpg';
+    backgroundImg.onload = function(){
+        ctx.drawImage(backgroundImg,0,0);
+    } 
+    */
+    canvas.width = 500;
+    canvas.height = 500;
+    
+    
+    for (let i = 0; i < 6; i++) {
+        for (let j = 0; j < 6; j++) {
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.fillRect(j*70, i*70, 60, 60 );
+            ctx.strokeRect(j*70, i*70, 60, 60 );
+        }
+    }
+    
+
+}
+initCanvas();
 
 /**
  * Función que gestiona el inicio de la partida
@@ -36,7 +72,7 @@ function initGame(){
     //comprobamos si existe algún juego activo con nuestro id de room
     GameServices.getAllGames()
         .then(response => {
-            debugger
+            //debugger
             // Comprobamos si el array de la respuesta tiene longitud
             if(response.length){
 
@@ -245,3 +281,5 @@ function setPlayerTwo(){
         item.style.fill = players[1].player.color;
     });
 };
+
+

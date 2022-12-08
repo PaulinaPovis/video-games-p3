@@ -363,6 +363,12 @@ h2{
     margin-left: auto;
     margin-right: auto;
 }
+canvas {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .board-item{
     background-color: white;
