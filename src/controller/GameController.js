@@ -230,17 +230,7 @@ class GameController {
       );
       if (existColor == undefined || existColor.length == 0)
         throw new Error("The cell color not exist " + cell.color);
-
-      /**
-       * He cambiado la primera posición del + 1 a - 1 para poder pulsar la celda 1 y 7 y que la vea como contigua
-       * Antes estaba asi
-       * 
-       * c.positionX == cellSelected.positionX + 1 &&
-            c.positionY == cellSelected.positionY &&
-            c.color == cell.color)
-
-        Por si no funciona y hay que volver a cambiar
-       */  
+ 
       const existContiguous = gameSelected.cells.filter(
         (c) =>
           (c.positionX == cellSelected.positionX - 1 &&

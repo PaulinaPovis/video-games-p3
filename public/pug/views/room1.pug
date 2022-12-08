@@ -6,7 +6,7 @@ block header
     +mixinSiteHeader(currentPage) 
 
 block content
-    .room-page.py-5(id="room-1")
+    .room-page1.py-5(id="room-1")
         .countdown
             .msg
         .final
@@ -36,6 +36,7 @@ block content
                         .board 
                             - for (var i = 0; i < 36; ++i)
                                 .board-item(id=i+1)
+                                    canvas(width="100%", height="100%")
                         .user-board.user-board-right.mt-5.mt-lg-0
                             .img-wrapper 
                                 img.img-fluid(src="../img/user-board-top.png")
