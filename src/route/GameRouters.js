@@ -1,6 +1,9 @@
 const { Router } = require('express');
 const { gameController } = require('../controller/GameController');
 const router = Router();
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
     router.get('/games', gameController.getAllGames);
     router.post('/games', gameController.createGame);

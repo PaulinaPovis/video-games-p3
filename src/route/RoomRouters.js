@@ -2,6 +2,9 @@ const { Router } = require('express');
 const { userController } = require('../controller/UserController');
 const { roomController } = require('../controller/RoomController');
 const router = Router();
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
     router.get('/rooms', roomController.getAllRooms);
     router.get('/rooms/:id',roomController.getRoomById);

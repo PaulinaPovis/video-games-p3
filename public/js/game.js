@@ -2,7 +2,8 @@ import { GameServices } from "./classes/api/GameServices.js";
 import { Player } from "./classes/Player.js";
 import { WinStorage } from "./classes/WindowStorageManager.js";
 
-
+// Socket.io
+const io = io();
 // Variables necesarias y nodos del DOM
 const user = WinStorage.getParsed('currentUser');
 const roomSelected = WinStorage.getParsed('roomSelected');
@@ -25,6 +26,7 @@ console.log(winText)
 let leftBoardPositions = 36;
 let gameId, winner;
 let players = [{}, {}];
+let player = undefined;
 
 
 /**
@@ -151,9 +153,12 @@ function addNewPlayerOnGame(gameId){
         const playerData = response;
         Object.assign(playerData, {boardPosition: 'right'});
         players[1] = new Player(response)
-        //TODO: descomentar cuando este socket.io
-        // setPlayerOne();
+        // Se guardan e intercambian los datos de los jugadores que hay en cada sala
+        setPlayerOne();
         setPlayerTwo();
+        console.log(players);
+        io.emit('game:player-1', (players));
+        io.emit('game:player-2', (players));
     })
     .catch(err => {
         // Gestionar el error
