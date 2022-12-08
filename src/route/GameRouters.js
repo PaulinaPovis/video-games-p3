@@ -1,6 +1,10 @@
 const { Router } = require('express');
 const { gameController } = require('../controller/GameController');
 const router = Router();
+    // global.io.emit('news', { hello: 'world' });
+    // global.io.on('connection', (socket) => {
+    //     console.log('a user connected');
+    // });
 
     router.get('/games', gameController.getAllGames);
     router.post('/games', gameController.createGame);

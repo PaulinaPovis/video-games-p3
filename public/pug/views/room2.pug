@@ -7,6 +7,8 @@ block header
 
 block content
     .room-page.py-5(id="room-2")
+        .countdown
+            .msg
         .final
         .container-fluid
             .row 
@@ -59,5 +61,6 @@ block content
                     button.btn.btn-warning.btn-exit-room(id="btn-exit-room") Exit Room
          
 block pageScripts 
+    script(src="socket.io/socket.io.js") 
     script(src="../js/index.js", type="module")
     script(src="../js/game.js", type="module")
