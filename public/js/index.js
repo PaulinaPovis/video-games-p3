@@ -1,4 +1,5 @@
 import { basePath } from "./classes/api/base.js";
+import { GameServices } from "./classes/api/GameServices.js";
 import { WinStorage } from "./classes/WindowStorageManager.js";
 
 /**
@@ -91,6 +92,7 @@ function doLogout(){
             menuHideOnLogin.classList.remove('hide');
             userDetail.classList.add('hide');
             userDetail.classList.remove('user-detail');
+            GameServices.deleteGameById(currentRoom.currentGameId)
 
             window.location.href = '/login.html';
         })
