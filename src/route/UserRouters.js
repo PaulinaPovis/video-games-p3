@@ -8,6 +8,9 @@ const router = Router();
     router.post('/users', userController.createUser);
     router.delete('/users',userController.deleteUser);
     router.post('/login',userController.login);
-   
 
+    // Socket.io
+    io.on('connection', (socket) => {console.log('user connected')});
+    socket.on('disconnect', () => {console.log('user disconnected');});
+   
     module.exports = router;

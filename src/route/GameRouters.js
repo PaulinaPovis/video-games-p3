@@ -15,7 +15,8 @@ const router = Router();
     router.put('/games/:idgame/cells/:idcell',gameController.updateCellByIdFromGameById);
     router.get('/games/:idgame/cells/:idcell',gameController.getCellByIdFromGameById);
 
+    // Socket.io
+    io.on('connection', (socket) => {console.log('user connected')});
+    socket.on('disconnect', () => {console.log('user disconnected');});
     
-    
-
     module.exports = router;

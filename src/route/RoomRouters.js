@@ -9,4 +9,8 @@ const router = Router();
     router.post('/rooms/:id/users', roomController.addUserOnRoom);
     router.post('/rooms/:id/delete-user', roomController.deleteUserOnRoom);
 
+    // Socket.io
+    io.on('connection', (socket) => {console.log('user connected')});
+    socket.on('disconnect', () => {console.log('user disconnected');});
+
     module.exports = router;
