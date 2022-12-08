@@ -67,7 +67,7 @@ class RoomController {
     deleteUserOnRoom(req=request,res=response){
         const user =  req.body;
         const {id} = req.params;
-        console.log('idRoom delete '+id);
+        console.log('idRoom delete ', id);
         roomData.rooms.forEach(r =>{
         if(u => u.id == id){
         const plays = r.players.filter(f  => f.id !=user.id);

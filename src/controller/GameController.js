@@ -2,6 +2,9 @@ const { gameData } = require("../data/GameData");
 const { request, response } = require("express");
 const { cell } = require("../model/Cell");
 const { game } = require("../model/Game");
+
+const gameJson = require("../../gamesJson.json");
+
 class GameController {
   getAllGames(req, res = response) {
     res.status(200);
@@ -52,6 +55,7 @@ class GameController {
     game.id = Math.floor(Math.random() * 1000000) + 10;
     game.players = [];
 
+
     //generando color aleatorio
     player.color =
       "#" +
@@ -80,6 +84,10 @@ class GameController {
     }
 
     gameData.games.push(game);
+
+
+    //Json
+    gameJson.games.push(game);
 
     res.status(200);
     res.json(game);
@@ -171,6 +179,11 @@ class GameController {
 
           console.log(player);
           u.players.push(player);
+
+          //JSON
+          // const currentGame = gameJson.games.find(game => game.id == idgame);
+          // currentGame.players.push(player);
+          //... JSON
         }
       });
 
@@ -189,6 +202,10 @@ class GameController {
       //inicio: valida si existen los datos enviados y devuelve la celda si exite
       const { idgame, idcell } = req.params;
       const gameSelected = gameData.games.filter((g) => g.id == idgame)[0];
+
+      //JSON
+      const currentJsonGame = gameJson.games.find(game => game.id == idgame);
+      //... JSON
 
       if (gameSelected == undefined)
         throw new Error("The game id " + idgame + " not exists ");
@@ -214,9 +231,19 @@ class GameController {
       if (existColor == undefined || existColor.length == 0)
         throw new Error("The cell color not exist " + cell.color);
 
+      /**
+       * He cambiado la primera posición del + 1 a - 1 para poder pulsar la celda 1 y 7 y que la vea como contigua
+       * Antes estaba asi
+       * 
+       * c.positionX == cellSelected.positionX + 1 &&
+            c.positionY == cellSelected.positionY &&
+            c.color == cell.color)
+
+        Por si no funciona y hay que volver a cambiar
+       */  
       const existContiguous = gameSelected.cells.filter(
         (c) =>
-          (c.positionX == cellSelected.positionX + 1 &&
+          (c.positionX == cellSelected.positionX - 1 &&
             c.positionY == cellSelected.positionY &&
             c.color == cell.color) ||
           (c.positionX == cellSelected.positionX + 1 &&
@@ -259,6 +286,9 @@ class GameController {
                   throw new Error("The cell is fill by " + c.color);
 
                 c.color = cell.color;
+                //JSON
+                currentJsonGame.cells[Number(cell.id) - 1].color = cell.color
+                //JSON
               }
             });
           } else {
@@ -276,6 +306,9 @@ class GameController {
                 throw new Error("Not exits cell contiguous for cell " + cell.id +" and color "+ cell.color);
 
                 c.color = cell.color;
+                //JSON
+                currentJsonGame.cells[Number(cell.id) - 1].color = cell.color
+                //JSON
               }
             });
           }

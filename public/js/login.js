@@ -1,3 +1,4 @@
+import { basePath } from "./classes/api/base.js";
 //Importamos la clase que gestiona el localstorage
 import { WinStorage } from "./classes/WindowStorageManager.js";
 
@@ -31,7 +32,7 @@ form.addEventListener('submit', (e) => {
             password: pass
         }
 
-        fetch('http://localhost:3000/api/login', {
+        fetch(`${basePath}/login`, {
             method: "POST",
             body: JSON.stringify(data),
             headers: new Headers(

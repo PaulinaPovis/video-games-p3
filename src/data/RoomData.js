@@ -12,10 +12,7 @@ class RoomData {
       name: "Room #2",
       description: "room some ...",
       image: 'img2',
-      players: [
-        {id: 3, userName: "maider"},
-        {id: 4, userName: "esther"},
-      ],
+      players: [],
     
     },
     {

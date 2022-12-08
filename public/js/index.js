@@ -1,3 +1,5 @@
+import { basePath } from "./classes/api/base.js";
+import { GameServices } from "./classes/api/GameServices.js";
 import { WinStorage } from "./classes/WindowStorageManager.js";
 
 /**
@@ -11,7 +13,7 @@ const user = WinStorage.getParsed('currentUser');
 
 if(user !== null && user !== undefined){
     
-    fetch('http://localhost:3000/api/users/' + user.id)
+    fetch(`${basePath}/users/` + user.id)
         .then(data => data.json())
         .then(response => {
             if(typeof response !== 'object'){
@@ -69,7 +71,7 @@ function doLogout(){
             id: currentUser.id,
             userName: currentUser.userName
         }
-        fetch('http://localhost:3000/api/rooms/' + currentRoom.id + '/delete-user', {
+        fetch(`${basePath}/rooms/${currentRoom.id}/delete-user`, {
             method: "POST",
             body: JSON.stringify(data),
             headers: new Headers(
@@ -90,6 +92,7 @@ function doLogout(){
             menuHideOnLogin.classList.remove('hide');
             userDetail.classList.add('hide');
             userDetail.classList.remove('user-detail');
+            GameServices.deleteGameById(currentRoom.currentGameId)
 
             window.location.href = '/login.html';
         })
@@ -97,5 +100,3 @@ function doLogout(){
     }
     
 };
-
-
