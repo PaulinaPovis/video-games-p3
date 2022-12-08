@@ -26,7 +26,7 @@ const boardSquares = document.querySelectorAll(`#room-${roomSelected.id} .board-
 document.querySelector('.header').classList.add('hide');
 document.querySelector('.footer').classList.add('hide');
 const roomPage = document.querySelector('.room-page');
-const canvas = document.querySelector('#canvas');
+const canvas = document.querySelector('#canvas2');
 
 //let leftBoardPositions = 36;
 let playerOneScore = 0;
@@ -55,7 +55,7 @@ function initCanvas(){
     canvas.width = 500;
     canvas.height = 500;
     
-    
+    /*
     for (let i = 0; i < 6; i++) {
         for (let j = 0; j < 6; j++) {
             ctx.fillStyle = 'white';
@@ -64,7 +64,13 @@ function initCanvas(){
             ctx.strokeRect(j*70, i*70, 60, 60 );
         }
     }
+    */
+    ctx.fillStyle = 'white';
+    ctx.strokeStyle = 'black';
+    ctx.fillRect(0, 0, 60, 60 );
+    ctx.strokeRect(0, 0, 60, 60 );
     
+
 
 }
 initCanvas();
