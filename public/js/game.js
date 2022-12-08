@@ -22,6 +22,7 @@ const userBoardRightNoUser = document.querySelector(`#room-${roomSelected.id} .u
 const svgRight = document.querySelectorAll(`#room-${roomSelected.id} #svg-right path`);
 const winText = document.querySelector(`#room-${roomSelected.id} .final`);
 const boardSquares = document.querySelectorAll(`#room-${roomSelected.id} .board-item`);
+const boardSquaresCanvas = document.querySelectorAll(`#room-${roomSelected.id} .board-item canvas`);
 
 document.querySelector('.header').classList.add('hide');
 document.querySelector('.footer').classList.add('hide');
@@ -31,6 +32,14 @@ let playerTwoScore = 0;
 let gameId;
 let players = [{}, {}];
 
+
+
+    boardSquaresCanvas.forEach(element => {
+        const ctx = element.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, element.width, element.height);
+
+    })
 
 /**
  * Función que gestiona el inicio de la partida
@@ -224,11 +233,14 @@ function startGame(args){
     setPlayerTwo();
 
     //Recorremos el array de cuadrados del HTML
-    boardSquares.forEach((element) => {
-
+    boardSquaresCanvas.forEach((element, index) => {
+        
         //Asignamos un escuchador con el evento click a cada elemento del array
         element.addEventListener('click', function(event){
-            const cellSelected = Number(event.target.id);
+            console.log(event)
+            const boardItem = boardSquares[index]
+            console.log(boardItem)
+            const cellSelected = Number(boardItem.id);
             setCell(cellSelected);
         });
     });
@@ -286,7 +298,12 @@ function updateGame(args){
     //Pinta las celdas de su color correspondiente y calcula las puntuaciones
     json.cells.forEach((cell, index) => {
         if(cell.color !== 'NONE'){
-            boardSquares[index].style.backgroundColor = cell.color;
+            // boardSquares[index].style.backgroundColor = cell.color;
+            const currentCanvas = boardSquaresCanvas[index];
+            console.log(currentCanvas);
+            let ctx = currentCanvas.getContext("2d");
+            ctx.fillStyle = cell.color;
+            ctx.fillRect(0, 0, currentCanvas.width, currentCanvas.height);
             if(currentPlayer.player.color === cell.color && currentPlayer.player.boardPosition === 'left'){
                 scoreOne++;
                 playerOneScore = scoreOne;
