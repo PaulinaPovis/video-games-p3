@@ -22,6 +22,13 @@ function setRooms(){
                 elementRooms[index].id = item.id;
                 titleRooms[index].innerHTML = item.name;
                 imageRooms[index].src = 'img/' + item.image + '.jpg';
+                item.players.forEach((player) => {
+                    var img = document.createElement('img');
+                    img.src = 'img/avatar-' + player.avatar.id + '.jpg';
+                    img.classList.add("roomPlayer");
+                    img.setAttribute('id',player.id);
+                    elementRooms[index].getElementsByClassName('card-header')[0].appendChild(img);
+                })
             });
 
             saveRoom();
